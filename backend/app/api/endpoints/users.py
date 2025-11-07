@@ -4,7 +4,7 @@ from sqlalchemy import select
 
 from app.db.session import get_db
 from app.db.models import User
-from app.crud import create_user, get_user
+from app.crud import create_user, get_user, get_users
 from app.schemas.user import UserCreate, UserRead
 
 router = APIRouter(prefix="/api/users", tags=["users"])
@@ -25,5 +25,10 @@ async def get_user_endpoint(user_id: int, db: AsyncSession = Depends(get_db)):
     
     # if result.scalar_one_or_none():
     #     raise HTTPException(400, f"No user with id {user_id}")
-    
-    return await get_user(db, user_id)
+    user = await get_user(db, user_id)
+    return user
+
+@router.get("/users", response_model=UserRead)
+async def get_users_endpoint(db: AsyncSession = Depends(get_db)):
+    users = await get_users(db)
+    return users[0] # TODO: some stuff

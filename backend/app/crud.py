@@ -25,3 +25,7 @@ async def create_user(db: AsyncSession, user_in: UserCreate) -> User:
 
 async def get_user(db: AsyncSession, user_id: int):
     return await db.get(User, user_id)
+
+async def get_users(db: AsyncSession):
+    return (await db.scalars(select(User))).all()
+    
