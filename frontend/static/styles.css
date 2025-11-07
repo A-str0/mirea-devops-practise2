@@ -105,6 +105,7 @@ input[type="password"]:focus {
 
 button {
     margin-top: 10px;
+    width: 100%;
     padding: 15px 30px;
     background: linear-gradient(45deg, var(--accent-color), var(--accent-hover));
     color: #000;
