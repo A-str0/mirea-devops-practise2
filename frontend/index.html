@@ -3,123 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Tester Frontend</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 100%;
-        }
-        h1 {
-            text-align: center;
-            color: #4a4a4a;
-            margin-bottom: 30px;
-        }
-        .form-section {
-            margin-bottom: 30px;
-        }
-        h2 {
-            color: #667eea;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="email"], input[type="password"] {
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
-            margin-top: 20px;
-            padding: 12px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #5a6fd8;
-        }
-        .note {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-        }
-        #response {
-            margin-top: 20px;
-            padding: 10px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            white-space: pre-wrap;
-            font-family: monospace;
-        }
-    </style>
+    <title>уэээээ</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>API Tester Frontend</h1>
+        <h1>уэээээ</h1>
         
         <div class="form-section">
-            <h2>Create User</h2>
+            <h2>Регистрация</h2>
             <form id="createUserForm">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
 
-                <label for="nickname">Nickname:</label>
+                <label for="nickname">Ник:</label>
                 <input type="text" id="nickname" name="nickname" required minlength="3" maxlength="50">
 
-                <label for="password">Password:</label>
+                <label for="password">Пароль:</label>
                 <input type="password" id="password" name="password" required minlength="8" maxlength="72">
 
-                <button type="submit">Create User</button>
+                <button type="submit">Зарегистрироваться</button>
             </form>
             <div id="createUserResponse" class="response"></div>
         </div>
 
         <div class="form-section">
-            <h2>Login</h2>
+            <h2>Логин</h2>
             <form id="loginForm">
                 <label for="username">Email:</label>
                 <input type="email" id="username" name="username" required>
 
-                <label for="password_login">Password:</label>
+                <label for="password_login">Пароль:</label>
                 <input type="password" id="password_login" name="password" required>
 
-                <button type="submit">Login</button>
+                <button type="submit">Войти</button>
             </form>
             <div id="loginResponse" class="response"></div>
         </div>
 
         <div class="form-section">
-            <h2>Get All Users</h2>
-            <button id="getUsersBtn">Fetch Users</button>
+            <h2>Список пользователей</h2>
+            <button id="getUsersBtn">го)</button>
             <div id="getUsersResponse" class="response"></div>
         </div>
     </div>
@@ -148,11 +72,15 @@
                 nickname: formData.get('nickname'),
                 password: formData.get('password')
             };
+            const responseDiv = document.getElementById('createUserResponse');
+            responseDiv.className = 'response';
             try {
                 const result = await sendRequest('/api/users/', 'POST', data);
-                document.getElementById('createUserResponse').textContent = JSON.stringify(result, null, 2);
+                responseDiv.classList.add('success');
+                responseDiv.innerHTML = `<strong>✅ User Created Successfully!</strong><br><pre>${JSON.stringify(result, null, 2)}</pre>`;
             } catch (error) {
-                document.getElementById('createUserResponse').textContent = 'Error: ' + error.message;
+                responseDiv.classList.add('error');
+                responseDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
             }
         });
 
@@ -163,20 +91,44 @@
                 username: formData.get('username'),
                 password: formData.get('password')
             };
+            const responseDiv = document.getElementById('loginResponse');
+            responseDiv.className = 'response';
             try {
                 const result = await sendRequest('/api/auth/login', 'POST', data);
-                document.getElementById('loginResponse').textContent = JSON.stringify(result, null, 2);
+                responseDiv.classList.add('success');
+                responseDiv.innerHTML = `<strong>🔐 Login Successful!</strong><br><div class="token-display"><strong>Access Token:</strong> ${result.access_token}<br><strong>Type:</strong> ${result.token_type}</div>`;
             } catch (error) {
-                document.getElementById('loginResponse').textContent = 'Error: ' + error.message;
+                responseDiv.classList.add('error');
+                responseDiv.innerHTML = `<strong>❌ Login Failed:</strong> ${error.message}`;
             }
         });
 
         document.getElementById('getUsersBtn').addEventListener('click', async () => {
+            const responseDiv = document.getElementById('getUsersResponse');
+            responseDiv.className = 'response';
             try {
                 const result = await sendRequest('/api/users/', 'GET');
-                document.getElementById('getUsersResponse').textContent = JSON.stringify(result, null, 2);
+                responseDiv.classList.add('success');
+                let html = '<strong>👥 All Users:</strong><br>';
+                if (Array.isArray(result) && result.length > 0) {
+                    result.forEach(user => {
+                        html += `
+                            <div class="user-card">
+                                <h3>${user.nickname}</h3>
+                                <p><strong>Email:</strong> ${user.email}</p>
+                                <p><strong>Active:</strong> ${user.is_active ? '✅ Yes' : '❌ No'}</p>
+                                <p><strong>Superuser:</strong> ${user.is_superuser ? '👑 Yes' : '👤 No'}</p>
+                                <p><strong>ID:</strong> ${user.id}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html += '<p>No users found.</p>';
+                }
+                responseDiv.innerHTML = html;
             } catch (error) {
-                document.getElementById('getUsersResponse').textContent = 'Error: ' + error.message;
+                responseDiv.classList.add('error');
+                responseDiv.innerHTML = `<strong>❌ Error fetching users:</strong> ${error.message}`;
             }
         });
     </script>
