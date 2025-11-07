@@ -1,7 +1,13 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    class Config:
-        env_file = ".env"
+    DATABASE_URL: str
+    DEBUG: bool = False
+
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "extra": "ignore"
+    }
 
 settings = Settings()
