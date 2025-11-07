@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from contextlib import asynccontextmanager
 
 from app.api.endpoints import users, login
@@ -23,3 +24,7 @@ app.include_router(login.router)
 @app.get("/health")
 async def health():
     return {"status": "OK"}
+
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    return HTMLResponse(content=open("frontend/index.html").read())
